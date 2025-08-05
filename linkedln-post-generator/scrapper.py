@@ -3,7 +3,6 @@ import json
 import time
 import sys
 
-# 👇 Only needed for Windows asyncio bug workaround
 if sys.platform.startswith("win"):
     import asyncio
     asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
@@ -15,7 +14,7 @@ PASSWORD = "doctordoom00"
 
 
 def scrapping(influencer: str):
-    os.makedirs("data", exist_ok=True)  # Ensure the output folder exists
+    os.makedirs("data", exist_ok=True)  
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -30,7 +29,6 @@ def scrapping(influencer: str):
 
 
         try:
-            # 👉 Login
             page.goto("https://www.linkedin.com/login")
             page.fill("input#username", EMAIL)
             page.fill("input#password", PASSWORD)
@@ -38,13 +36,11 @@ def scrapping(influencer: str):
             page.wait_for_load_state("domcontentloaded")
             time.sleep(5)
 
-            # 👉 Go to influencer activity page
             activity_url = f"https://www.linkedin.com/in/{influencer}/recent-activity/all/"
             page.goto(activity_url)
             page.wait_for_load_state("domcontentloaded")
             time.sleep(5)
 
-            # 👉 Scroll to load posts
             for _ in range(3):
                 page.mouse.wheel(0, 2000)
                 time.sleep(2)
@@ -81,7 +77,6 @@ def scrapping(influencer: str):
                     "comments": comments
                 })
 
-            # 👉 Save all posts to a JSON file
             file_path = os.path.join("data", f"{influencer}_posts.json")
             with open(file_path, "w", encoding="utf-8") as f:
                 json.dump({"posts": post_content}, f, indent=4, ensure_ascii=False)

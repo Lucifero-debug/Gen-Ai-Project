@@ -13,14 +13,11 @@ from langchain_core.output_parsers import StrOutputParser
 app = Flask(__name__)
 load_dotenv()
 
-# Check for required environment variable
 if not os.getenv("HUGGINGFACEHUB_API_TOKEN"):
     raise ValueError("HUGGINGFACEHUB_API_TOKEN not found in .env file")
 
-# Initialize embeddings and LLM
 embeddings = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')
 
-# Use a better model for Q&A tasks
 llm = HuggingFaceEndpoint(
     repo_id="mistralai/Mixtral-8x7B-Instruct-v0.1",
     task="text-generation"
@@ -33,7 +30,6 @@ def format_docs(retrieved_docs):
     context_text = "\n\n".join(doc.page_content for doc in retrieved_docs)
     return context_text
 
-# Improved prompt template
 prompt = PromptTemplate(
     template="""You are a helpful assistant that answers questions based on the provided context.
 
@@ -55,7 +51,6 @@ def summary():
         try:
             pdf = request.files['pdf']
             query = request.form['query']
-            # Validation
             if not pdf or pdf.filename == '':
                 return render_template('index.html', result="Error: No file selected")
             
@@ -65,43 +60,35 @@ def summary():
             if not pdf.filename.lower().endswith('.pdf'):
                 return render_template('index.html', result="Error: Please upload a PDF file")
             
-            # Process PDF
             temp_file_path = None
             try:
-                # Save PDF to a temporary file
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
                     pdf.save(temp_file.name)
                     temp_file_path = temp_file.name
                 
-                # Load PDF with PyPDFLoader
                 loader = PyPDFLoader(temp_file_path)
                 documents = loader.load()
                 if not documents:
                     return render_template('index.html', result="Error: Could not extract text from PDF")
                 
-                # Prepare text for processing
                 full_text = "\n\n".join([doc.page_content for doc in documents])
                 
                 if not full_text.strip():
                     return render_template('index.html', result="Error: PDF appears to be empty or contains no readable text")
                 
-                # Create metadata
                 full_metadata = documents[0].metadata.copy() if documents else {}
                 
-                # Split text into chunks
                 splitter = RecursiveCharacterTextSplitter(
                     chunk_size=1000, 
                     chunk_overlap=200,
                     length_function=len
                 )
                 chunks = splitter.create_documents([full_text], metadatas=[full_metadata])
-                # Create vector store
                 vector_store = FAISS.from_documents(chunks, embeddings)
                 retriever = vector_store.as_retriever(
                     search_type="similarity", 
                     search_kwargs={"k": 4}
                 )
-                # Create the processing chain
                 parallel_chain = RunnableParallel({
                     'context': retriever | RunnableLambda(format_docs),
                     'question': RunnablePassthrough()
@@ -110,11 +97,9 @@ def summary():
                 parser = StrOutputParser()
                 main_chain = parallel_chain | prompt | model | parser
                 
-                # Get answer
                 answer = main_chain.invoke(query)
                 print(answer)
                 
-                # Clean up the answer
                 if isinstance(answer, str):
                     answer = answer.strip()
                     if not answer:
@@ -124,18 +109,15 @@ def summary():
 
                 
             finally:
-                # Clean up temporary file
                 if temp_file_path and os.path.exists(temp_file_path):
                     try:
                         os.remove(temp_file_path)
                     except OSError:
-                        pass  # File might already be deleted
-                        
+                        pass 
         except Exception as e:
             print(f"Error processing request: {str(e)}")
             return render_template('index.html', result=f"Error: {str(e)}")
     
-    # Handle GET request
     return render_template('index.html')
 
 if __name__ == "__main__":

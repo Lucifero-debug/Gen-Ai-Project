@@ -38,13 +38,11 @@ import re
 from langchain_core.messages import AIMessage
 
 def clean_response(response) -> str:
-    # Convert AIMessage to plain text if needed
     if isinstance(response, AIMessage):
         text = response.content
     else:
         text = str(response)
 
-    # Now extract only the part after <|assistant|>
     if "<|assistant|>" in text:
         text = text.split("<|assistant|>", 1)[-1]
 
@@ -129,7 +127,7 @@ llm = HuggingFacePipeline.from_model_id(
     pipeline_kwargs=dict(
         temperature=0.7,
         max_new_tokens=700,
-        repetition_penalty=1.2,   # discourages looping
+        repetition_penalty=1.2,  
         do_sample=True 
     )
 )

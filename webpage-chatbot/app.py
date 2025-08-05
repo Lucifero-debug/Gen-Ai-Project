@@ -66,18 +66,15 @@ if st.button("📥 Submit Link"):
             st.session_state["retriever"] = retriever
             st.session_state["content_loaded"] = True
 
-# Show question input only after content is loaded
 if st.session_state.get("content_loaded"):
 
     st.markdown("---")
 
-    # Initialize state
     if "question" not in st.session_state:
         st.session_state["question"] = ""
     if "generating" not in st.session_state:
         st.session_state["generating"] = False
 
-    # Define a function to handle answer generation
     def generate_answer():
         st.session_state["generating"] = True
         with st.spinner("Thinking..."):
@@ -85,14 +82,12 @@ if st.session_state.get("content_loaded"):
             context_text = "\n\n".join([doc.page_content for doc in retrieved_docs])
             response = get_gemini_response(context_text, st.session_state["question"])
             st.session_state["answer"] = response
-        st.session_state["question"] = ""  # Clear input after generation
+        st.session_state["question"] = ""  
         st.session_state["generating"] = False
 
-    # Input + Button
     st.text_input("❓ Ask a question about the webpage:", key="question")
     st.button("🤖 Get Answer", on_click=generate_answer, disabled=st.session_state["generating"])
 
-    # Display response
     if "answer" in st.session_state and st.session_state["answer"]:
         st.subheader("🧠 Gemini's Answer:")
         st.write(st.session_state["answer"])

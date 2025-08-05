@@ -48,7 +48,6 @@ language_mapping={
 
 def main():
     st.subheader("Youtube Video Chatbot And Summariser")
-  # Only show input fields if retriever not ready
     if not st.session_state.retriever_ready:
         input_url = st.text_input("Enter Video URL")
         select_language = st.selectbox("Choose Language", options=["English", "Hindi"])
@@ -76,7 +75,6 @@ def main():
             except Exception as e:
                 st.error(f"Error: {e}")
 
-    # Question-answer section
     if st.session_state.retriever_ready:
         retriever = st.session_state.retriever
         parallel_chain = RunnableParallel({

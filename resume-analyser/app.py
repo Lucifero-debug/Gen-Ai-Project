@@ -19,7 +19,7 @@ llm = HuggingFacePipeline.from_model_id(
     pipeline_kwargs=dict(
         temperature=0.5,
         max_new_tokens=700,
-        repetition_penalty=1.2,   # discourages looping
+        repetition_penalty=1.2,   
         do_sample=True 
     )
 )
@@ -40,13 +40,11 @@ parser = StrOutputParser()
 import re
 from langchain_core.messages import AIMessage
 def clean_response(response) -> str:
-    # Convert AIMessage to plain text if needed
     if isinstance(response, AIMessage):
         text = response.content
     else:
         text = str(response)
 
-    # Now extract only the part after <|assistant|>
     if "<|assistant|>" in text:
         text = text.split("<|assistant|>", 1)[-1]
 
@@ -70,12 +68,10 @@ def analyse():
                 return render_template('index.html', response="Error: No file selected")
             temp_file_path = None
             try:
-                # Save PDF to a temporary file
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
                     pdf.save(temp_file.name)
                     temp_file_path = temp_file.name
                 
-                # Load PDF with PyPDFLoader
                 loader = PyPDFLoader(temp_file_path)
                 documents = loader.load()
                 if not documents:
