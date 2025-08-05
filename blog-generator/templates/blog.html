@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Blog Post</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.7;
+      padding: 20px;
+    }
+
+    .blog-container {
+      max-width: 800px;
+      margin: auto;
+      background-color: #fff;
+      padding: 40px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+    }
+
+    .blog-image {
+      width: 100%;
+      border-radius: 8px;
+      object-fit: cover;
+      margin-bottom: 30px;
+    }
+
+    .blog-title {
+      font-size: 2.2rem;
+      margin-bottom: 20px;
+      color: #111;
+    }
+
+    .blog-content p {
+      margin-bottom: 16px;
+      text-align: justify;
+    }
+
+    @media (max-width: 768px) {
+      .blog-container {
+        padding: 20px;
+      }
+
+      .blog-title {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="blog-container">
+      {% if image %}
+      <img
+        src="{{image}}"
+        alt="Blog Banner"
+        class="blog-image"
+      />
+    {% endif %}
+
+    
+    <h1 class="blog-title">{{topic}}</h1>
+
+      {% if blog %}
+    <div class="blog-content">
+      <p>{{blog}}</p>
+    </div>
+    {% endif %}
+
+  </div>
+</body>
+</html>

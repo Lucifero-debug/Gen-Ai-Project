@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+          <div class="root" style="display: flex; flex-direction: column;align-items: center;">
+    <h1 style="text-align: center;">Blog Generator</h1>
+    <form id="podcastForm" action="/submit" method="post">
+      <div style="display: flex; flex-direction: column; gap: 15px;">
+        <label for="pdf">Upload Your Text Prompt</label>
+        <textarea name="topic" id="topic" required rows="5" cols="86"></textarea>
+        <div style="display: flex; gap:15px;">
+            <select class="form-select" aria-label="Default select example" id="tone" name="tone">
+           <option selected>Select Tone</option>
+          <option value="0">Casual</option>
+           <option value="1">Formal</option>
+           <option value="2">Professional</option>
+           <option value="3">informative</option>
+         </select>
+         <input type="number" id="length" name="length">
+        </div>
+        <button class="btn btn-danger" style="width: 100px; align-self: center;" type="submit">Submit</button>
+      </div>
+    </form>
+</body>
+</html>

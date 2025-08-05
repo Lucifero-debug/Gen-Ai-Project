@@ -1,0 +1,10 @@
+streamlit
+langchain-community 
+langchain-huggingface 
+langchain-core
+langchain
+faiss-cpu 
+tiktoken 
+python-dotenv 
+langchain-groq
+playwright

@@ -1,0 +1,24 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+      <div class="root" style="display: flex; flex-direction: column;align-items: center;">
+    <h1 style="text-align: center;">Resume Analyser</h1>
+    <form id="pdfForm" enctype="multipart/form-data" action="/submit" method="post">
+      <div style="display: flex; flex-direction: column; gap: 15px;">
+        <label for="pdf">Upload Your PDF</label>
+        <input type="file" name="pdf" id="pdf" required />
+        <button class="btn btn-danger" style="width: 100px; align-self: center;" type="submit">Submit</button>
+      </div>
+    </form>
+      {%if response%}
+      <div id="result" style="margin-top: 30px; max-width: 800px;">
+        {{response}}
+      </div>
+      {%endif%}
+  </div>
+</body>
+</html>
